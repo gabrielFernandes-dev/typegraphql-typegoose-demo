@@ -76,7 +76,6 @@ export class UserService {
     const itemDeleted = await UserModel.findByIdAndDelete(id);
 
     if (!itemDeleted || !Object.keys(itemDeleted).length) {
-      ctx.res.statusCode = 404;
       ctx.res.statusMessage = 'User not found';
       return false;
     }

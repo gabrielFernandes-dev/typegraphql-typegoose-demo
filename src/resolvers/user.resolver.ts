@@ -9,6 +9,7 @@ import {
 import { Arg, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 import { UserService } from '../service/user.service';
 import Context from 'src/types/context';
+import { UserInputError } from 'apollo-server';
 
 @Resolver(User)
 class UserResolver {
@@ -35,13 +36,24 @@ class UserResolver {
     return this.service.findAllUsers();
   }
 
-  @Query(() => User)
+  @Query(() => User, { nullable: true })
   user(
-    @Arg('where', { nullable: false }) userWhereInput: UserWhereInput
+    @Arg('where', { nullable: false }) userWhereInput: UserWhereInput,
+    @Ctx() ctx: Context
   ): Promise<User | null> {
-    if (userWhereInput?._id) return this.service.findById(userWhereInput._id);
-    if (userWhereInput?.email)
+    if (
+      !Object.keys(userWhereInput).length ||
+      (!userWhereInput._id && !userWhereInput.email)
+    ) {
+      ctx.res.statusMessage = 'Invalid "where" Input';
+      throw new UserInputError('Invalid "where" Input');
+    }
+
+    if (userWhereInput._id) return this.service.findById(userWhereInput._id);
+
+    if (userWhereInput.email)
       return this.service.findByEmail(userWhereInput.email);
+
     return Promise.resolve(null);
   }
 
