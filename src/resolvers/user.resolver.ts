@@ -36,12 +36,12 @@ class UserResolver {
 
   @Query(() => User)
   user(
-    @Arg('where', { nullable: true }) userWhereInput: UserWhereInput
-  ): Promise<User | User[] | null> {
-    if (userWhereInput._id) return this.service.findById(userWhereInput._id);
-    if (userWhereInput.email)
+    @Arg('where', { nullable: false }) userWhereInput: UserWhereInput
+  ): Promise<User | null> {
+    if (userWhereInput?._id) return this.service.findById(userWhereInput._id);
+    if (userWhereInput?.email)
       return this.service.findByEmail(userWhereInput.email);
-    return this.service.findAllUsers();
+    return Promise.resolve(null);
   }
 
   @Mutation(() => User)
