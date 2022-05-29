@@ -64,12 +64,16 @@ export class UserService {
     return result;
   }
 
-  async updateUser(input: UpdateUserInput): Promise<User | null> {
-    return await UserModel.findByIdAndUpdate(
-      input._id,
-      { $set: { ...input } },
-      { new: true }
-    );
+  async updateUser(input: UpdateUserInput, ctx: Context): Promise<User | null> {
+    const itemUpdated = await UserModel.findByIdAndUpdate(input._id, input, {
+      new: true,
+    });
+
+    if (!itemUpdated || !Object.keys(itemUpdated).length) {
+      ctx.res.statusMessage = 'User not found';
+    }
+
+    return itemUpdated;
   }
 
   async deleteUser(id: ObjectId | string, ctx: Context) {

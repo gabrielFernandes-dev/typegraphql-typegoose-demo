@@ -84,7 +84,7 @@ export class CreateUserInput {
 @InputType()
 export class UpdateUserInput {
   @Field(() => ID, { nullable: false })
-  _id: ObjectId;
+  _id: string;
 
   @Field(() => String, { nullable: true })
   name: string;

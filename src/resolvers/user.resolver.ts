@@ -14,9 +14,7 @@ import { UserInputError } from 'apollo-server';
 
 @Resolver(User)
 class UserResolver {
-  constructor(private service: UserService) {
-    this.service = new UserService();
-  }
+  constructor(private service = new UserService()) {}
 
   @Mutation(() => CreateUserResult)
   register(
@@ -58,11 +56,17 @@ class UserResolver {
     return Promise.resolve(null);
   }
 
-  @Mutation(() => User)
+  @Mutation(() => User, { nullable: true })
   updateUser(
-    @Arg('input', { nullable: false }) userUpdateInput: UpdateUserInput
+    @Arg('input', { nullable: false }) userUpdateInput: UpdateUserInput,
+    @Ctx() ctx: Context
   ) {
-    return this.service.updateUser(userUpdateInput);
+    if (!userUpdateInput._id || userUpdateInput._id.length < 24) {
+      ctx.res.statusMessage = 'Bad request';
+      throw new UserInputError('Invalid User Id');
+    }
+
+    return this.service.updateUser(userUpdateInput, ctx);
   }
 
   @Mutation(() => Boolean)
