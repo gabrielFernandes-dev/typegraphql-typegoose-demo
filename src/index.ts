@@ -8,6 +8,7 @@ import { buildSchema } from 'type-graphql';
 import { resolvers } from './resolvers';
 import Context from './types/context';
 import { connectToMongo } from './utils/mongo';
+import { authChecker } from './auth-checker';
 
 async function main() {
   const app = express();
@@ -15,8 +16,13 @@ async function main() {
   const server = new ApolloServer({
     schema: await buildSchema({
       resolvers,
+      authChecker,
     }),
     context: (ctx: Context) => {
+      const { authorization } = ctx.req.headers;
+      if (authorization) {
+        ctx.authToken = authorization.split(' ')[1];
+      }
       return ctx;
     },
   });
