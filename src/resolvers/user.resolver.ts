@@ -6,8 +6,9 @@ import {
   User,
   UserWhereInput,
 } from '../schemas/user.schema';
-import { Arg, Mutation, Query, Resolver } from 'type-graphql';
+import { Arg, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 import { UserService } from '../service/user.service';
+import Context from 'src/types/context';
 
 @Resolver(User)
 class UserResolver {
@@ -50,8 +51,11 @@ class UserResolver {
   }
 
   @Mutation(() => Boolean)
-  deleteUser() {
-    return false;
+  deleteUser(
+    @Arg('where', { nullable: false }) userWhereInput: UserWhereInput,
+    @Ctx() ctx: Context
+  ): Promise<boolean> {
+    return this.service.deleteUser(userWhereInput._id, ctx);
   }
 }
 
