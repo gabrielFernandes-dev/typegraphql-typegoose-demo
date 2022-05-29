@@ -19,7 +19,7 @@ export class UserService {
     return await UserModel.find();
   }
 
-  async findById(id: ObjectId): Promise<User | null> {
+  async findById(id: ObjectId | string): Promise<User | null> {
     return await UserModel.findById(id);
   }
 

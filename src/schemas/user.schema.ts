@@ -129,7 +129,7 @@ export class CreateUserResult {
 @InputType()
 export class UserWhereInput {
   @Field(() => ID, { nullable: false })
-  _id: ObjectId;
+  _id: string;
 
   @Field(() => String, { nullable: true })
   email: string;
