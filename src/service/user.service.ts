@@ -23,6 +23,10 @@ export class UserService {
     return await UserModel.findById(id);
   }
 
+  async findByEmail(email: string): Promise<User | null> {
+    return await UserModel.findOne({ email });
+  }
+
   async createUser(input: CreateUserInput): Promise<CreateUserResult> {
     const secret = process.env.JWT_ACCESS_SECRET as string;
     const expiresIn = '15min';
@@ -40,9 +44,9 @@ export class UserService {
 
   async login(input: LoginInput): Promise<LoginResult> {
     const result = new LoginResult();
-    
+
     result.expiresIn = '15min';
-    
+
     const accessSecret = process.env.JWT_ACCESS_SECRET || '';
 
     const user = await UserModel.find().findByEmail(input.email);
