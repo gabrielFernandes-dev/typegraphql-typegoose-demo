@@ -3,6 +3,7 @@ import {
   CreateUserResult,
   LoginInput,
   LoginResult,
+  UpdateUserInput,
   User,
   UserWhereInput,
 } from '../schemas/user.schema';
@@ -58,8 +59,10 @@ class UserResolver {
   }
 
   @Mutation(() => User)
-  updateUser() {
-    return null;
+  updateUser(
+    @Arg('input', { nullable: false }) userUpdateInput: UpdateUserInput
+  ) {
+    return this.service.updateUser(userUpdateInput);
   }
 
   @Mutation(() => Boolean)

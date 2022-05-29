@@ -86,13 +86,13 @@ export class UpdateUserInput {
   @Field(() => ID, { nullable: false })
   _id: ObjectId;
 
-  @Field(() => String, { nullable: false })
+  @Field(() => String, { nullable: true })
   name: string;
 
-  @Field(() => String, { nullable: false })
+  @Field(() => String, { nullable: true })
   email: string;
 
-  @Field(() => String, { nullable: false })
+  @Field(() => String, { nullable: true })
   phoneNumber: string;
 }
 
