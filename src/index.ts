@@ -25,13 +25,13 @@ async function main() {
 
   server.applyMiddleware({ app });
 
+  connectToMongo(process.env.DATABASE_URI);
+
   app.listen({ port: 4000 }, () =>
     console.log(
       `🚀 Server awaiting for incoming requests on http://localhost:4000/graphql`
     )
   );
-
-  connectToMongo(process.env.DATABASE_URI);
 }
 
 main();
