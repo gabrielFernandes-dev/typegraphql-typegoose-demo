@@ -73,15 +73,14 @@ export class UserService {
   }
 
   async deleteUser(id: ObjectId | string, ctx: Context) {
-    let deleted = true;
-    await UserModel.findByIdAndDelete(id).exec((err, item) => {
-      if (err) throw new ApolloError('Err tryng to delete user');
-      if (!item) {
-        ctx.res.statusCode = 404;
-        deleted = false;
-      }
-    });
+    const itemDeleted = await UserModel.findByIdAndDelete(id);
 
-    return deleted;
+    if (!itemDeleted || !Object.keys(itemDeleted).length) {
+      ctx.res.statusCode = 404;
+      ctx.res.statusMessage = 'User not found';
+      return false;
+    }
+
+    return true;
   }
 }
